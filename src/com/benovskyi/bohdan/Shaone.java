@@ -53,7 +53,23 @@ public class Shaone {
 			j++;
 		}
 		
+		for(int i = 0; i < 16; i++) {
+			System.out.println("Слово[" + i + "] в двійковій системі числення:" + msgBlock[i] + ", в десятковій системі числення: " + Integer.parseInt(msgBlock[i], 2));
+		}
 		
+		for(int i = 16; i < 80; i++) {
+			int x1 = Integer.parseInt(msgBlock[i-3], 2);
+			int x2 = Integer.parseInt(msgBlock[i-8], 2);
+			int x3 = Integer.parseInt(msgBlock[i-14], 2);
+			int x4 = Integer.parseInt(msgBlock[i-16], 2);
+			
+			x = (x1 ^ x2 ^ x3 ^ x4) << 1;
+		}
+	}
+	
+	public static int rotl(int x, int y) {
+		int z = (x << y) | (x >> (32-y));
+		return z;
 	}
 
 }
