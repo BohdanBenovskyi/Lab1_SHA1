@@ -94,15 +94,51 @@ public class Shaone {
 		int h3 = 0x10325476;
 		int h4 = 0xC3D2E1F0;
 		
-		int a = h0;
-		int b = h1;
-		int c = h2;
-		int d = h3;
-		int e = h4;
+		long a = h0;
+		long b = h1;
+		long c = h2;
+		long d = h3;
+		long e = h4;
+		
+		long k = 0;
+		long f = 0;
 		
 		for(int i = 0; i < 80; i++) {
+			if(i >= 0 && i <= 19) {
+				f = (b & c) | ((~b) & d);
+			    k = 0x5A827999;
+			}
+			else if(i >= 20 && i <= 39) {
+				f = b ^ c ^ d;
+			    k = 0x6ED9EBA1;
+			}
+			else if(i >= 40 && i <= 59) {
+				f = (b & c) | (b & d) | (c & d);
+			    k = 0x8F1BBCDC;
+			}
+			else if(i >= 60 && i <= 79) {
+				f = b ^ c ^ d;
+			    k = 0xCA62C1D6;
+			}
 			
+			long temp = (a << 5) + f + e + k + Long.parseLong(msgBlock[i], 2);
+			e = d;
+			d = c;
+			c = b << 30;
+			b = a;
+			a = temp;
+			
+			h0 += a;
+			h1 += b;
+			h2 += c;
+			h3 += d;
+			h4 += e;
 		}
+		
+		String hash = new StringBuilder().append(Long.toHexString(h0)).append(Long.toHexString(h1))
+				.append(Long.toHexString(h2)).append(Long.toHexString(h3)).append(Long.toHexString(h4)).toString();
+		
+		System.out.println("Результат: " + hash);
 	}
 	
 	public static long rotl(long x, int y) {
