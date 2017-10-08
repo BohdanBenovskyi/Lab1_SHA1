@@ -78,12 +78,30 @@ public class Shaone {
 			
 			long x =  rotl((x1 ^ x2 ^ x3 ^ x4), 1);
 			
+			//треба буде кастанути до інта потім
 			msgBlock[i] = String.format("%32s", Long.toBinaryString(x)).replace(' ', '0');
 		}
 		
 		
 		for(int i = 0; i < 80; i++) {
 			System.out.println("Слово[" + i + "] в двійковій системі числення:" + msgBlock[i] + ", в десятковій системі числення: " + Long.parseLong(msgBlock[i], 2));
+		}
+		
+		//ініціалізація 5-ти регістрів
+		int h0 = 0x67452301;
+		int h1 = 0xEFCDAB89;
+		int h2 = 0x98BADCFE;
+		int h3 = 0x10325476;
+		int h4 = 0xC3D2E1F0;
+		
+		int a = h0;
+		int b = h1;
+		int c = h2;
+		int d = h3;
+		int e = h4;
+		
+		for(int i = 0; i < 80; i++) {
+			
 		}
 	}
 	
