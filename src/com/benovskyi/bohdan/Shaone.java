@@ -2,11 +2,15 @@ package com.benovskyi.bohdan;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Shaone {
 
 	public static void main(String[] args) {
-		String msg = "Benovskyi";
+		String msg;
+		Scanner in = new Scanner(System.in);
+        System.out.println("Введіть текст для обробки: ");
+        msg = in.nextLine();
 		
 		String lenOfMsg = String.format("%64s", Integer.toBinaryString(msg.length()*8)).replace(' ', '0');
 		System.out.println("Бінарне представлення розміру повідомлення: " + lenOfMsg);
@@ -71,15 +75,14 @@ public class Shaone {
 			int x =  rotl((x1 ^ x2 ^ x3 ^ x4), 1);
 			*/
 			
-			long x1 = Long.parseLong(msgBlock[i-3], 2);
-			long x2 = Long.parseLong(msgBlock[i-8], 2);
-			long x3 = Long.parseLong(msgBlock[i-14], 2);
-			long x4 = Long.parseLong(msgBlock[i-16], 2);
+			int x1 = (int)Long.parseLong(msgBlock[i-3], 2);
+			int x2 = (int)Long.parseLong(msgBlock[i-8], 2);
+			int x3 = (int)Long.parseLong(msgBlock[i-14], 2);
+			int x4 = (int)Long.parseLong(msgBlock[i-16], 2);
 			
-			long x =  rotl((x1 ^ x2 ^ x3 ^ x4), 1);
+			int x =  rotl((x1 ^ x2 ^ x3 ^ x4), 1);
 			
-			//треба буде кастанути до інта потім
-			msgBlock[i] = String.format("%32s", Long.toBinaryString(x)).replace(' ', '0');
+			msgBlock[i] = String.format("%32s", Integer.toBinaryString(x)).replace(' ', '0');
 		}
 		
 		
@@ -94,14 +97,14 @@ public class Shaone {
 		int h3 = 0x10325476;
 		int h4 = 0xC3D2E1F0;
 		
-		long a = h0;
-		long b = h1;
-		long c = h2;
-		long d = h3;
-		long e = h4;
+		int a = h0;
+		int b = h1;
+		int c = h2;
+		int d = h3;
+		int e = h4;
 		
-		long k = 0;
-		long f = 0;
+		int k = 0;
+		int f = 0;
 		
 		for(int i = 0; i < 80; i++) {
 			if(i >= 0 && i <= 19) {
@@ -121,28 +124,29 @@ public class Shaone {
 			    k = 0xCA62C1D6;
 			}
 			
-			long temp = (a << 5) + f + e + k + Long.parseLong(msgBlock[i], 2);
+			int y = (int)Long.parseLong(msgBlock[i], 2);
+			int temp = (a << 5) + f + e + k + y;
 			e = d;
 			d = c;
 			c = b << 30;
 			b = a;
 			a = temp;
-			
-			h0 += a;
-			h1 += b;
-			h2 += c;
-			h3 += d;
-			h4 += e;
 		}
 		
-		String hash = new StringBuilder().append(Long.toHexString(h0)).append(Long.toHexString(h1))
-				.append(Long.toHexString(h2)).append(Long.toHexString(h3)).append(Long.toHexString(h4)).toString();
+		h0 += a;
+		h1 += b;
+		h2 += c;
+		h3 += d;
+		h4 += e;
+		
+		String hash = new StringBuilder().append(Integer.toHexString(h0)).append(Integer.toHexString(h1))
+				.append(Integer.toHexString(h2)).append(Integer.toHexString(h3)).append(Integer.toHexString(h4)).toString();
 		
 		System.out.println("Результат: " + hash);
 	}
 	
-	public static long rotl(long x, int y) {
-		long q = (x << y) | (x >>> (32 - y));
+	public static int rotl(int x, int y) {
+		int q = (x << y) | (x >>> (32 - y));
         return q;
 	}
 
