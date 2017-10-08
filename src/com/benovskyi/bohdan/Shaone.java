@@ -1,5 +1,6 @@
 package com.benovskyi.bohdan;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 
 public class Shaone {
@@ -21,7 +22,8 @@ public class Shaone {
 		System.out.println("Повідомлення в бітах: " + binStr);
 		System.out.println("Довжина повідомлення (бітів): " + binStr.length());
 		
-		binStr += "1";
+		//binStr += "1";
+		binStr += String.format("%8s", Integer.toBinaryString(0x80)).replace(' ', '0');
 		System.out.println("Одиничний біт був доданий!");
 		
 		if(binStr.length() < 448)
@@ -53,23 +55,41 @@ public class Shaone {
 			j++;
 		}
 		
-		for(int i = 0; i < 16; i++) {
-			System.out.println("Слово[" + i + "] в двійковій системі числення:" + msgBlock[i] + ", в десятковій системі числення: " + Integer.parseInt(msgBlock[i], 2));
+		for(int i = 16; i < 80; i++) {
+			msgBlock[i] = "0";
+			for(int l = 0; l < 31; l++)
+				msgBlock[i] += "0";
 		}
 		
 		for(int i = 16; i < 80; i++) {
+			/*
 			int x1 = Integer.parseInt(msgBlock[i-3], 2);
 			int x2 = Integer.parseInt(msgBlock[i-8], 2);
 			int x3 = Integer.parseInt(msgBlock[i-14], 2);
 			int x4 = Integer.parseInt(msgBlock[i-16], 2);
 			
-			x = (x1 ^ x2 ^ x3 ^ x4) << 1;
+			int x =  rotl((x1 ^ x2 ^ x3 ^ x4), 1);
+			*/
+			
+			long x1 = Long.parseLong(msgBlock[i-3], 2);
+			long x2 = Long.parseLong(msgBlock[i-8], 2);
+			long x3 = Long.parseLong(msgBlock[i-14], 2);
+			long x4 = Long.parseLong(msgBlock[i-16], 2);
+			
+			long x =  rotl((x1 ^ x2 ^ x3 ^ x4), 1);
+			
+			msgBlock[i] = String.format("%32s", Long.toBinaryString(x)).replace(' ', '0');
+		}
+		
+		
+		for(int i = 0; i < 80; i++) {
+			System.out.println("Слово[" + i + "] в двійковій системі числення:" + msgBlock[i] + ", в десятковій системі числення: " + Long.parseLong(msgBlock[i], 2));
 		}
 	}
 	
-	public static int rotl(int x, int y) {
-		int z = (x << y) | (x >> (32-y));
-		return z;
+	public static long rotl(long x, int y) {
+		long q = (x << y) | (x >>> (32 - y));
+        return q;
 	}
 
 }
